@@ -22,9 +22,12 @@ private:
     Point a, b, c, d;
     Point right_dir, up_dir;
     float lowc, highc, leftc, rightc;
-    bool is_table_valid = true;
+    bool is_table_valid = false;
 
 public:
+
+    Table() {}
+
     Table(Point start, int width, int height, Ball ball)
     {
         a = start;
@@ -61,6 +64,7 @@ public:
         highc  = d*up_dir    - ball.get_r();
         leftc  = a*right_dir + ball.get_r();
         rightc = b*right_dir - ball.get_r();
+        is_table_valid = true;
     }
 
     Table(Point a, Point b, Point c, Point d, Ball ball)
@@ -93,77 +97,7 @@ public:
         highc  = d*up_dir    - ball.get_r();
         leftc  = a*right_dir + ball.get_r();
         rightc = b*right_dir - ball.get_r();
-    }
-
-    void change_table(int width, int height)
-    {
-        if(width != 2 * height || width != height / 2)
-        {
-            std::cout << "Invalid table dimentions" << std::endl;
-            return;
-        }
-
-        b = {a.get_x() + width, a.get_y()};
-        c = {a.get_x() + width, a.get_y() + height};
-        d = {a.get_x(), a.get_y() + height};
-
-        right_dir = b-a;
-        right_dir = right_dir / right_dir.get_dist();
-        up_dir    = d-a;
-        up_dir    = up_dir / up_dir.get_dist();
-
-        lowc   = a*up_dir    + ball.get_r();
-        highc  = d*up_dir    - ball.get_r();
-        leftc  = a*right_dir + ball.get_r();
-        rightc = b*right_dir - ball.get_r();
-
-    }
-
-    void change_table( Point start, int width, int height)
-    {
-        if(width != 2 * height || width != height / 2)
-        {
-            std::cout << "Invalid table dimentions" << std::endl;
-            return;
-        }
-
-        a = start;
-        b = {a.get_x() + width, a.get_y()};
-        c = {a.get_x() + width, a.get_y() + height};
-        d = {a.get_x(), a.get_y() + height};
-
-        right_dir = b-a;
-        right_dir = right_dir / right_dir.get_dist();
-        up_dir    = d-a;
-        up_dir    = up_dir / up_dir.get_dist();
-
-        lowc   = a*up_dir    + ball.get_r();
-        highc  = d*up_dir    - ball.get_r();
-        leftc  = a*right_dir + ball.get_r();
-        rightc = b*right_dir - ball.get_r();
-    }
-
-    void change_table(Point a, Point b, Point c, Point d)
-    {
-        if(a.get_dist(b) != b.get_dist(c) / 2 && a.get_dist(b) != b.get_dist(c) * 2)
-        {
-            std::cout << "Not valid points" << std::endl;
-            is_table_valid = false;
-        }
-        this->a = a;
-        this->b = b;
-        this->c = c;
-        this->d = d;
-
-        right_dir = b-a;
-        right_dir = right_dir / right_dir.get_dist();
-        up_dir    = d-a;
-        up_dir    = up_dir / up_dir.get_dist();
-
-        lowc   = a*up_dir    + ball.get_r();
-        highc  = d*up_dir    - ball.get_r();
-        leftc  = a*right_dir + ball.get_r();
-        rightc = b*right_dir - ball.get_r();
+        is_table_valid = true;
     }
 
     void change_ball(Ball ball)
@@ -171,6 +105,7 @@ public:
         if(!ball.is_ball_on_table(a, b, c, d))
         {
             std::cout << "Ball not on the table" << std::endl;
+            is_table_valid = false;
             return;
         }
 
@@ -180,10 +115,11 @@ public:
         highc  = d*up_dir    - ball.get_r();
         leftc  = a*right_dir + ball.get_r();
         rightc = b*right_dir - ball.get_r();
+        is_table_valid = true;
     }
 
+    bool get_is_valid () const { return is_table_valid; }
     Ball get_ball() const { return ball; }
-
 
 
     /**
@@ -219,6 +155,7 @@ public:
 
         /**
          * on every iteration of the while from power is substarcated the current power
+           power will never be 0 but will be very close so we check for eps
          */
 
         while (power > eps)

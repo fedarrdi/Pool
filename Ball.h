@@ -27,11 +27,16 @@ public:
     float get_r() const { return d / 2;}
 
     void set_position(const Point &position) { this->position = position; }
-
     bool is_ball_on_table(Point a, Point b, Point c, Point d)
     {
         return true;
 
+    }
+
+    void print()
+    {
+        position.print();
+        std::cout << "d: " << d << std::endl;
     }
 
 };
